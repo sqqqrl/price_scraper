@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@types/puppeteer": "^7.0.4",
-    "puppeteer": "^19.7.1"
+    "puppeteer": "^19.7.1",
+    "true-myth": "^4.0.0"
   }
 }
