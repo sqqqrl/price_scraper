@@ -1,27 +1,32 @@
 {
   "compilerOptions": {
-    "composite": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "declaration": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["esnext", "dom"],
-    "module": "esnext",
-    "moduleResolution": "Node",
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    "module": "commonjs",
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "alwaysStrict": true,
     "noUnusedLocals": true,
     "pretty": true,
     "sourceMap": true,
     "strict": true,
-    "allowSyntheticDefaultImports": true,
     "target": "es2017",
     "rootDir": ".",
-    "outDir": "lib"
+    "outDir": "lib",
+    "skipLibCheck": true
   },
-  "exclude": ["node_modules"],
+  "exclude": [
+    "node_modules",
+    "dump"
+  ],
   "include": ["src/**/*.ts", "__tests__/**/*.ts"],
+  "skipLibCheck": true,
 }

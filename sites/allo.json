@@ -1,0 +1,20 @@
+{
+    "url": "https://allo.ua/",
+    "title": "Интернет-Магазин Allo",
+    "sitemap": {
+        "url": "https://allo.ua/",
+        "HTMLContainer": "body > div#webkit-xml-viewer-source-xml",
+        "regexArray": [
+            {
+                "purpose": "captureLinks",
+                "regex": "https:\\\/\\\/allo\\.ua\\\/map\\\/secure\\\/products\\\/sitemap\\d+\\.xml\\.gz",
+                "mod": "g"
+            },
+            {
+                "purpose": "renameAfterDistract",
+                "regex": ".+(sitemap\\w+\\.xml)\\.gz",
+                "mod": "$1"
+            }
+        ]
+    }
+}

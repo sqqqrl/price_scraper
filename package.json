@@ -2,16 +2,18 @@
   "name": "allo_price_scraper",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "lib/src/main.js",
   "scripts": {
     "compile": "npx tsc -p ./tsconfig.json --skipLibCheck",
     "lint": "npx eslint src/**/*.ts --fix",
-    "start": "npm run compile && node ./lib/src/main.js"
+    "start": "npm run compile && node ./lib/src/main.js",
+    "parseXml": "npm run compile && node ./lib/src/parseXML.js"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/node-gzip": "^1.1.0",
+    "@types/xml2js": "^0.4.11",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
     "@typescript-eslint/typescript-estree": "^2.33.0",
@@ -19,12 +21,15 @@
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-prettier": "^3.1.2",
-    "prettier": "^1.19.1",
+    "prettier": "1.19.1",
     "typescript": "^4.9.5"
   },
   "dependencies": {
     "@types/puppeteer": "^7.0.4",
+    "axios": "^1.4.0",
+    "node-gzip": "^1.1.2",
     "puppeteer": "^19.7.1",
-    "true-myth": "^4.0.0"
+    "true-myth": "^4.0.0",
+    "xml2js": "^0.5.0"
   }
 }
