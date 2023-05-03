@@ -3,12 +3,12 @@ import { RegexObject, SiteConfig } from './types/Sitemap';
 export const clearString = (str: string): string =>
   str.replace(/\n/g, '').trim();
 
-export const arrayBufferCheck = (value: any): boolean =>
+export const isArrayBuffer = (value: any): boolean =>
   value &&
   value.buffer instanceof ArrayBuffer &&
   value.byteLength !== undefined;
 
-export const getSitemapRegexArray = (purpose: string): RegexObject => {
+export const getRegexObjectFromSitemap = (purpose: string): RegexObject => {
   const {
     sitemap: { regexArray },
   }: SiteConfig = global.siteConfigs;

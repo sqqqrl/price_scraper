@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer';
-import { arrayBufferCheck, getSitemapRegexArray } from '../utils';
+import { isArrayBuffer, getRegexObjectFromSitemap } from '../utils';
 import { extractFile, typeChecker, downloadFile } from './lib';
 import { xmlFolderPath } from '../config';
 import { SitemapConfigObject } from '../types/Sitemap';
@@ -14,7 +14,7 @@ export const getSitemapLinks = async ({
   await page.goto(url + 'sitemap.xml');
   await page.waitForSelector('body');
 
-  const { regex, mod } = getSitemapRegexArray('captureLinks');
+  const { regex, mod } = getRegexObjectFromSitemap('captureLinks');
 
   const links = await page.$eval(
     HTMLContainer,
@@ -35,13 +35,13 @@ export const downloadSitemaps = async (
   links: string[],
   folderPath: string
 ): Promise<void> => {
-  const { regex, mod } = getSitemapRegexArray('renameAfterDistract');
+  const { regex, mod } = getRegexObjectFromSitemap('renameAfterDistract');
 
   for (const url of links) {
     try {
       await extractFile(
         typeChecker(
-          arrayBufferCheck,
+          isArrayBuffer,
           await downloadFile({
             url,
             method: 'GET',
@@ -61,11 +61,11 @@ export const downloadSitemaps = async (
   }
 };
 
-export const sitemapMain = async (): Promise<void> => {
-  const upadteState = true;
+// TODO: refactor
+export const sitemapMain = async (updateState: boolean): Promise<void> => {
   const { sitemap } = global.siteConfigs;
 
-  if (upadteState) {
+  if (updateState) {
     const sitemapUrls = await getSitemapLinks(sitemap);
     if (sitemapUrls) {
       try {

@@ -1,39 +1,26 @@
-import { readFileSync } from 'fs';
-import { SiteConfig } from './types/Sitemap';
 import { sitemapMain } from './liba/sitemaps';
+import { argv } from './liba/cli';
+import { CliOptions } from './types/Options';
+import { parseXmls } from './liba/parseXML';
 
-// will be added to logger
-const setJsonConfigs = (site: string): any => {
-  try {
-    const jsonConfigs = JSON.parse(
-      readFileSync(`./sites/${site}.json`).toString()
-    );
+(async (cliArgs: CliOptions): Promise<void> => {
+  const { siteConfigFile, headless = false } = cliArgs;
 
-    return jsonConfigs;
-  } catch (err) {
-    throw new Error(`
-    -----------------------
-    Failed to open site config file:
-    -----------------------
-    ${err}`);
-  }
-};
-
-(async (): Promise<void> => {
-  // TODO: add cli
-  const cliOptions = {
-    site: 'allo',
-  };
-  const siteConfigs: SiteConfig = setJsonConfigs(cliOptions.site);
-
-  global.siteConfigs = siteConfigs;
+  //TODO: md refactor this (remove global)
+  global.siteConfigs = siteConfigFile;
   global.puppeteerOptions = {
-    headless: true,
+    headless,
     defaultViewport: {
       width: 1920,
       height: 1080,
     },
   };
 
-  await sitemapMain();
-})();
+  try {
+    await sitemapMain(false);
+    const urls = parseXmls();
+    console.log(urls);
+  } catch (err) {
+    throw new Error(`${err}`);
+  }
+})(argv);
