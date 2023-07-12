@@ -1,6 +1,10 @@
-import { SiteConfig } from './Sitemap';
+import { Suite } from '../liba/wrappers/suite';
 
 export type CliOptions = {
-  siteConfigFile: SiteConfig;
+  suite: string;
   headless?: boolean;
+};
+
+export type Exports = { default: { [suite: string]: Suite } } & {
+  [k: string]: unknown;
 };

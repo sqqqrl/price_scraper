@@ -1,4 +1,6 @@
+import { Exports } from './types/Options';
 import { RegexObject, SiteConfig } from './types/Sitemap';
+import { resolve, parse } from 'path';
 
 export const clearString = (str: string): string =>
   str.replace(/\n/g, '').trim();
@@ -18,4 +20,9 @@ export const getRegexObjectFromSitemap = (purpose: string): RegexObject => {
   }
 
   throw new Error(`${purpose} is undefined`);
+};
+
+export const getExport = async (path: string): Promise<Exports> => {
+  const { dir, name } = parse(path);
+  return await import(resolve(`./lib/${dir}/${name}.js`));
 };

@@ -3,8 +3,8 @@ import { parseString } from 'xml2js';
 import { xmlFolderPath } from '../config';
 
 export const parseXmls = (): string[][] => {
-  const files = readdirSync(xmlFolderPath).map(path =>
-    readFileSync(`${xmlFolderPath}/${path}`, 'utf-8')
+  const files = readdirSync(xmlFolderPath).map(fileName =>
+    readFileSync(`${xmlFolderPath}/${fileName}`, 'utf-8')
   );
 
   const urls: string[][] = [];

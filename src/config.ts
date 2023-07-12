@@ -1,1 +1,1 @@
-export const xmlFolderPath = './xmls';
+export const xmlFolderPath = './xmls/';

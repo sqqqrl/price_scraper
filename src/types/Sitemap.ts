@@ -15,3 +15,9 @@ export type RegexObject = {
   regex: string;
   mod: string;
 };
+
+export type SitemapConfig = {
+  sitemapUrl: string;
+  HTMLContainer: string;
+  regex: string | RegExp;
+};
