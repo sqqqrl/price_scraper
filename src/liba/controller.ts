@@ -1,17 +1,22 @@
 import { Suite } from './wrappers/suite';
 
-type SuiteResult = any;
+type SuiteReport = Promise<any>;
 
-const start = (suite: Suite): SuiteResult => {
-  //   suite.actions
+const start = async (suite: Suite): SuiteReport => {
   const { actions } = suite.flow;
 
-  const result = actions.flatMap(action => action(suite.props));
-
-  console.log(result);
+  for (const action of actions) {
+    const result = await action(suite.props);
+    console.log(result);
+  }
 };
 
-export const controller = (suite: Suite): SuiteResult => {
-  const res = start(suite);
-  return res;
+export const controller = (suites: Suite[]): SuiteReport[] => {
+  const suiteReports: SuiteReport[] = [];
+  for (const suite of suites) {
+    const report = start(suite);
+    suiteReports.push(report);
+  }
+
+  return suiteReports;
 };

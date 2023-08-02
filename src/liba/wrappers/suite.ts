@@ -1,6 +1,7 @@
 export type SuiteProperties = {
   url: string;
   sitemapUrl: string;
+  xmlFolder: string;
 };
 
 type Action = any;

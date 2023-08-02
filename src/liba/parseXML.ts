@@ -1,8 +1,10 @@
-import { readFileSync, readdirSync } from 'fs';
+import { readFileSync, readdirSync, existsSync } from 'fs';
 import { parseString } from 'xml2js';
-import { xmlFolderPath } from '../config';
 
-export const parseXmls = (): string[][] => {
+export const parseXmls = (xmlFolderPath: string): string[][] => {
+  if (!existsSync(xmlFolderPath))
+    throw new Error(`Folder "${xmlFolderPath}" is not exist.`);
+
   const files = readdirSync(xmlFolderPath).map(fileName =>
     readFileSync(`${xmlFolderPath}/${fileName}`, 'utf-8')
   );

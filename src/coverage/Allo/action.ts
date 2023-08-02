@@ -1,4 +1,9 @@
 import { xmlFolderPath } from '../../config';
+import { parseXmls } from '../../liba/parseXML';
+import {
+  defineCategories,
+  sortLinksByCategories,
+} from '../../liba/wrappers/links';
 import {
   downloadAndExtactArchive,
   getArchiveLinks,
@@ -42,4 +47,22 @@ export const downloadSitemaps = (func: GetArchiveLinksFromSitemap) => async (
       `${xmlFolderPath}/allo/${archiveName[0]}`
     );
   }
+};
+
+export const collectProductLinks = ({ xmlFolder }: SuiteProperties): any => {
+  const result = [];
+
+  try {
+    const productLinks = parseXmls(xmlFolder);
+    const categories = defineCategories(productLinks);
+    const sortedLinksByCategories = sortLinksByCategories(
+      categories,
+      productLinks
+    );
+    console.log(sortedLinksByCategories);
+  } catch (e) {
+    console.log(e);
+  }
+
+  return result;
 };

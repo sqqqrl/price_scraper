@@ -8,11 +8,12 @@ import { controller } from './liba/controller';
   const { suite, headless = false } = cliArgs;
   console.log(suite);
 
+  // TODO: add the ability to import multiple suites
   const importedSuite = (await getExport(suite)).default.suite;
 
   configs.headless = headless;
 
-  const kekw = controller(importedSuite);
+  const kekw = controller([importedSuite]);
   console.log(kekw);
 
   // try {
