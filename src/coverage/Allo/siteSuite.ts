@@ -1,18 +1,17 @@
-import { xmlFolderPath } from '../../config';
+import { testXmlFolder } from '../../config';
 import { Suite } from '../../liba/wrappers/suite';
-import {
-  // downloadSitemaps,
-  // getArchiveLinksFromSitemap,
-  collectProductLinks,
-} from './action';
+import { initSiteCollection, start } from './actions';
 
 const suite = new Suite({
+  siteName: 'Allo',
   url: 'https://allo.ua/',
   sitemapUrl: 'https://allo.ua/sitemap.xml',
-  xmlFolder: xmlFolderPath + 'allo/',
+  xmlFolder: testXmlFolder,
 }).actions([
+  initSiteCollection,
   // downloadSitemaps(getArchiveLinksFromSitemap),
-  collectProductLinks,
+  // collectProductLinks,
+  start,
 ]);
 
 export default {

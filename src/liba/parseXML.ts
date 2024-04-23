@@ -9,14 +9,18 @@ export const parseXmls = (xmlFolderPath: string): string[][] => {
     readFileSync(`${xmlFolderPath}/${fileName}`, 'utf-8')
   );
 
-  const urls: string[][] = [];
+  try {
+    const urls: string[][] = [];
 
-  for (const file of files) {
-    parseString(file, (err, res) => {
-      if (err) throw new Error(`${err}`);
-      return urls.push(res.urlset.url.map(el => el?.loc.shift()));
-    });
+    for (const file of files) {
+      parseString(file, (err, res) => {
+        if (err) throw new Error(`${err}`);
+        return urls.push(res.urlset.url.map(el => el?.loc.shift()));
+      });
+    }
+
+    return urls;
+  } catch (e) {
+    throw new Error(`parseXmls: ${e}`);
   }
-
-  return urls;
 };

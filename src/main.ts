@@ -6,15 +6,12 @@ import { controller } from './liba/controller';
 
 (async (cliArgs: CliOptions): Promise<void> => {
   const { suite, headless = false } = cliArgs;
-  console.log(suite);
-
   // TODO: add the ability to import multiple suites
   const importedSuite = (await getExport(suite)).default.suite;
-
   configs.headless = headless;
 
-  const kekw = controller([importedSuite]);
-  console.log(kekw);
+  const start = controller([importedSuite]);
+  console.log(start);
 
   // try {
   //   await sitemapMain(false);

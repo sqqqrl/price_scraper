@@ -1,4 +1,5 @@
 export type SuiteProperties = {
+  siteName: string;
   url: string;
   sitemapUrl: string;
   xmlFolder: string;
