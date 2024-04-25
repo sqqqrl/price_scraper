@@ -12,6 +12,7 @@ import { siteService } from '../../database/services/site.service';
 import { unavailableLinkService } from '../../database/services/unavailable-links.service';
 import { productService } from '../../database/services/product.service';
 import { ARCHIVED_LINK, UNAVAILABLE_LINK } from './constants';
+import { testService } from '../../database/services/test.service';
 
 const saveLink = async (
   url: string,
@@ -81,14 +82,44 @@ export const scrapProducts = async (
   // const test = [
   //   'https://allo.ua/ru/materinskie-platy/asus-p7h55-m-pro-lga1156-4xddr3-dimm-1xpci-e-16x-hd-audio-7-1-ethernet-1000-mb-s-hdmi-uatx.html',
   // ];
-  // const step = 100;
-  // const arrays = Array.from(
-  //   { length: Math.ceil(productLinks.length / step) },
-  //   () => productLinks.splice(-step)
-  // );
 
-  // arrays.forEach(arr => arr.map());
-  // console.log(arrays);
+  const data = testService.save([
+    {
+      name: 'kekew',
+      url: 'kekkeke',
+    },
+    {
+      name: 'kekew2',
+      url: 'kekkeke2',
+    },
+    {
+      name: 'kekew3',
+      url: 'kekkeke3',
+    },
+    {
+      name: 'kekew4',
+      url: 'kekkeke4',
+    },
+    {
+      name: 'kekew5',
+      url: 'kekkeke5',
+    },
+  ]);
+
+  console.log(data);
+
+  const step = 100;
+  const arrays = Array.from(
+    { length: Math.ceil(productLinks.length / step) },
+    () => productLinks.splice(-step)
+  );
+
+  arrays.forEach(arr =>
+    arr.map(url => {
+      console.log(url);
+    })
+  );
+  console.log(arrays);
 
   for (const url of productLinks) {
     try {
