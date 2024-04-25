@@ -1,4 +1,4 @@
-import { testXmlFolder } from '../../config';
+import { xmlFolderPath } from '../../config';
 import { Suite } from '../../liba/wrappers/suite';
 import { initSiteCollection, start } from './actions';
 
@@ -6,11 +6,10 @@ const suite = new Suite({
   siteName: 'Allo',
   url: 'https://allo.ua/',
   sitemapUrl: 'https://allo.ua/sitemap.xml',
-  xmlFolder: testXmlFolder,
+  xmlFolder: xmlFolderPath + 'allo/',
 }).actions([
   initSiteCollection,
-  // downloadSitemaps(getArchiveLinksFromSitemap),
-  // collectProductLinks,
+  // downloadSitemaps(scrapArhivesWithProductLinks),
   start,
 ]);
 

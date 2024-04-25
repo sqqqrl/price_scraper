@@ -36,6 +36,8 @@ const ProductSchema = new Schema<Product>(
     category: SchemaTypes.String,
     name: SchemaTypes.String,
     price: SchemaTypes.String,
+    site: SchemaTypes.ObjectId,
+    url: SchemaTypes.String,
   },
   {
     timestamps: true,

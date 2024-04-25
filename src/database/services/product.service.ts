@@ -11,15 +11,15 @@ class ProductService {
     this.productModel = createProductModel(conn());
   }
 
-  // async existsByName(productName: string): Promise<boolean> {
-  //   try {
-  //     const exist = await this.productModel.exists({ name: productName });
+  async existsByUrl(url: string): Promise<boolean> {
+    try {
+      const exist = await this.productModel.exists({ url });
 
-  //     return Boolean(exist);
-  //   } catch (e) {
-  //     throw new Error('Product not exists by this name: ' + e);
-  //   }
-  // }
+      return Boolean(exist);
+    } catch (e) {
+      throw new Error('Failed to execute "exists" func: ' + e);
+    }
+  }
 
   // async findByName(productName: string): Promise<ObjectId> {
   //   try {
@@ -35,7 +35,10 @@ class ProductService {
 
   async save(data: ProductDto): Promise<void> {
     try {
-      await this.productModel.create({ ...data });
+      const exist = await this.existsByUrl(data.url);
+      if (!exist) {
+        await this.productModel.create({ ...data });
+      }
     } catch (e) {
       throw new Error('Failed to create product: ' + e);
     }

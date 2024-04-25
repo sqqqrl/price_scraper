@@ -11,20 +11,7 @@ import { archivedLinkService } from '../../database/services/archived-links.serv
 import { siteService } from '../../database/services/site.service';
 import { unavailableLinkService } from '../../database/services/unavailable-links.service';
 import { productService } from '../../database/services/product.service';
-
-export const scrapProductInfo = async (url: string): Promise<ProductJSON> => {
-  const reqData = (await axios.get(url)).data;
-  const [productInfo] = getFirstGroup(
-    /var\s?layer\s?=\s?(.*?[^;]+)/gm,
-    reqData
-  ).map(el => parseStringObjectToJSON(el));
-
-  if (productInfo == null) {
-    throw new Error(`No info was captured in: ${url}`);
-  }
-
-  return productInfo;
-};
+import { ARCHIVED_LINK, UNAVAILABLE_LINK } from './constants';
 
 const saveLink = async (
   url: string,
@@ -34,13 +21,13 @@ const saveLink = async (
   const siteId = await siteService.findByName(siteName);
 
   switch (productAvailability) {
-    case 'archival':
+    case ARCHIVED_LINK:
       await archivedLinkService.save({
         url,
         site: siteId,
       });
       break;
-    case 'unavailable':
+    case UNAVAILABLE_LINK:
       await unavailableLinkService.save({
         url,
         site: siteId,
@@ -51,10 +38,58 @@ const saveLink = async (
   }
 };
 
+export const scrapProductInfo = async (
+  url: string,
+  siteName: string
+): Promise<ProductJSON> => {
+  const req = await axios
+    .get(url, {
+      maxRedirects: 0,
+    })
+    .catch(async err => {
+      if (err.response.statusText === 'Moved Permanently') {
+        await saveLink(
+          url,
+          {
+            productAvailability: ARCHIVED_LINK,
+          } as ProductJSON,
+          siteName
+        );
+        throw new Error('Moved Permanently');
+      }
+      throw new Error(err);
+    });
+
+  const [productInfo] = getFirstGroup(
+    /var\s?layer\s?=\s?(.*?[^;]+)/gm,
+    req.data.replace(/&\w+;/gm, '')
+  ).map(el => parseStringObjectToJSON(el));
+
+  if (productInfo == null) {
+    throw new Error(`No info was captured in: ${url}`);
+  }
+
+  return productInfo;
+};
+
 export const scrapProducts = async (
   productLinks: string[],
   siteName: string
 ): Promise<void> => {
+  //test
+  // console.log(productLinks.length);
+  // const test = [
+  //   'https://allo.ua/ru/materinskie-platy/asus-p7h55-m-pro-lga1156-4xddr3-dimm-1xpci-e-16x-hd-audio-7-1-ethernet-1000-mb-s-hdmi-uatx.html',
+  // ];
+  // const step = 100;
+  // const arrays = Array.from(
+  //   { length: Math.ceil(productLinks.length / step) },
+  //   () => productLinks.splice(-step)
+  // );
+
+  // arrays.forEach(arr => arr.map());
+  // console.log(arrays);
+
   for (const url of productLinks) {
     try {
       console.time('scrap time');
@@ -66,7 +101,7 @@ export const scrapProducts = async (
       }
 
       //get product information from site and parse it to json
-      const productInfo = await scrapProductInfo(url);
+      const productInfo = await scrapProductInfo(url, siteName);
 
       //check product availability and put in db if not available or archived
       if (isProductUnavailable(productInfo) || isProductArchived(productInfo)) {
@@ -87,7 +122,12 @@ export const scrapProducts = async (
 
       console.timeEnd('scrap time');
     } catch (e) {
-      throw new Error('kekw: ' + e);
+      console.log({
+        error: `scrapProducts: ${url} ----------
+        ${e}`,
+      });
+      console.timeEnd('scrap time');
+      continue;
     }
   }
 };

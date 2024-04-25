@@ -2,7 +2,7 @@ import puppeteer from 'puppeteer';
 import { SitemapConfig } from '../../types/Sitemap';
 import { configs } from '../../puppeteer.config';
 import { isArrayBuffer } from '../../utils';
-import { extractFile, typeChecker, downloadFile } from '../lib';
+import { writeFile, typeChecker, downloadFile } from '../lib';
 
 export const getArchiveLinks = async ({
   sitemapUrl,
@@ -35,7 +35,7 @@ export const downloadAndExtactArchive = async (
   path: string
 ): Promise<void> => {
   try {
-    await extractFile(
+    await writeFile(
       typeChecker(
         isArrayBuffer,
         await downloadFile({

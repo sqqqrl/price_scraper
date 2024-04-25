@@ -1,5 +1,4 @@
 import { writeFileSync } from 'fs';
-import { ungzip } from 'node-gzip';
 import { CheckerFunc } from '../types/TypeChecker';
 import axios, { AxiosRequestConfig } from 'axios';
 
@@ -25,13 +24,12 @@ export const downloadFile = async (
   }
 };
 
-export const extractFile = async (
+export const writeFile = async (
   data: ArrayBuffer,
   path: string
 ): Promise<void> => {
   try {
-    const file = await ungzip(data);
-    writeFileSync(path, file);
+    writeFileSync(path, data.toString());
   } catch (err) {
     throw new Error(`${err}`);
   }
