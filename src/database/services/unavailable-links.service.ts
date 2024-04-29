@@ -25,7 +25,28 @@ class UnavailableLinkService {
     try {
       await this.unavailableLinkModel.create({ ...data });
     } catch (e) {
-      throw new Error('Failed to create archived link: ' + e);
+      throw new Error('Failed to create unavailable link: ' + e);
+    }
+  }
+
+  async saveAll(data: UnavailableLinkDto[]): Promise<UnavailableLinkDto[]> {
+    try {
+      return this.unavailableLinkModel.insertMany(data);
+    } catch (e) {
+      throw new Error('Failed to create unavailable links: ' + e);
+    }
+  }
+
+  findAll(urls: string[]): Promise<UnavailableLinkDto[]> {
+    try {
+      return this.unavailableLinkModel
+        .find()
+        .where('url')
+        .in(urls)
+        .lean()
+        .exec();
+    } catch (e) {
+      throw new Error('Failed to findAll unavailable link: ' + e);
     }
   }
 }

@@ -43,5 +43,21 @@ class ProductService {
       throw new Error('Failed to create product: ' + e);
     }
   }
+
+  async saveAll(data: ProductDto[]): Promise<void> {
+    try {
+      await this.productModel.bulkWrite(
+        data.map(product => ({
+          updateOne: {
+            filter: { id: product.id },
+            update: { $set: product },
+            upsert: true,
+          },
+        }))
+      );
+    } catch (e) {
+      throw new Error('Failed to create products: ' + e);
+    }
+  }
 }
 export const productService = new ProductService();

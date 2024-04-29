@@ -23,9 +23,9 @@ export type ProductJSON = {
   productGroupName: string;
 };
 
-export type ProductResult = {
-  link: string;
-  data: ProductJSON;
+export type ProductParseResult = {
+  url: string;
+  product: ProductJSON;
 };
 
 export type ScrapArhivesWithProductLinks = (

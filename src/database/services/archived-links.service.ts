@@ -28,5 +28,26 @@ class ArchivedLinkService {
       throw new Error('Failed to create archived link: ' + e);
     }
   }
+
+  async saveAll(data: ArchivedLinkDto[]): Promise<ArchivedLinkDto[]> {
+    try {
+      return this.archivedLinkModel.insertMany(data);
+    } catch (e) {
+      throw new Error('Failed to create archived links: ' + e);
+    }
+  }
+
+  findAll(urls: string[]): Promise<ArchivedLinkDto[]> {
+    try {
+      return this.archivedLinkModel
+        .find()
+        .where('url')
+        .in(urls)
+        .lean()
+        .exec();
+    } catch (e) {
+      throw new Error('Failed to findAll archived link: ' + e);
+    }
+  }
 }
 export const archivedLinkService = new ArchivedLinkService();

@@ -38,3 +38,7 @@ export const isExistInUnavailableLinks = async (
 export const isExist = async (link: string): Promise<boolean> =>
   (await isExistInArchivedLinks(link)) ||
   (await isExistInUnavailableLinks(link));
+
+export const notEmpty = <TValue>(
+  value: TValue | null | undefined
+): value is TValue => value !== null && value !== undefined;
