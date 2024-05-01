@@ -39,12 +39,7 @@ class ArchivedLinkService {
 
   findAll(urls: string[]): Promise<ArchivedLinkDto[]> {
     try {
-      return this.archivedLinkModel
-        .find()
-        .where('url')
-        .in(urls)
-        .lean()
-        .exec();
+      return this.archivedLinkModel.find().where('url').in(urls).lean().exec();
     } catch (e) {
       throw new Error('Failed to findAll archived link: ' + e);
     }

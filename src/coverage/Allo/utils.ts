@@ -1,10 +1,11 @@
+import { AxiosError, isAxiosError } from 'axios';
 import { archivedLinkService } from '../../database/services/archived-links.service';
 import { unavailableLinkService } from '../../database/services/unavailable-links.service';
 import { ARCHIVED_LINK, UNAVAILABLE_LINK } from './constants';
 import { ProductJSON } from './types';
 
 export const getFirstGroup = (regex: RegExp, str: string): string[] => {
-  return Array.from(str.matchAll(regex), m => m[1]);
+  return Array.from(str.matchAll(regex), (m) => m[1]);
 };
 
 export const parseStringObjectToJSON = (
@@ -42,3 +43,6 @@ export const isExist = async (link: string): Promise<boolean> =>
 export const notEmpty = <TValue>(
   value: TValue | null | undefined
 ): value is TValue => value !== null && value !== undefined;
+
+export const notAxiosError = <T>(element: T | AxiosError): element is T =>
+  !isAxiosError(element);

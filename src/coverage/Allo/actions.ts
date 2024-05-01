@@ -28,6 +28,9 @@ export const start = async ({
   // const productLinks = parseXmls(xmlFolder).flat();
   const productLinks = parseXmlByFilename(xmlFolder, 'sitemap1.xml');
 
+  //set site object id to global
+  global.siteId = await siteService.findByName(siteName);
+
   await scrapProducts(productLinks, siteName);
 
   return;
