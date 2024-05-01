@@ -52,3 +52,28 @@
 // );
 // .map(processBodyResponse)
 // .filter(notEmpty);
+
+// const saveLink = async (
+//   url: string,
+//   { productAvailability }: ProductJSON,
+//   siteName: string
+// ): Promise<void> => {
+//   const siteId = await siteService.findByName(siteName);
+
+//   switch (productAvailability) {
+//     case ARCHIVED_LINK:
+//       await archivedLinkService.save({
+//         url,
+//         site: siteId,
+//       });
+//       break;
+//     case UNAVAILABLE_LINK:
+//       await unavailableLinkService.save({
+//         url,
+//         site: siteId,
+//       });
+//       break;
+//     default:
+//       throw new Error('No one case found for: ' + productAvailability);
+//   }
+// };

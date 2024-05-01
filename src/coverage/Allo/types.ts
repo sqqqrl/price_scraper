@@ -1,3 +1,4 @@
+import { AxiosError, AxiosResponse } from 'axios';
 import { SuiteProperties } from '../../liba/wrappers/suite';
 
 export type Product = {
@@ -31,3 +32,6 @@ export type ProductParseResult = {
 export type ScrapArhivesWithProductLinks = (
   sitemapUrl: SuiteProperties
 ) => Promise<string[]>;
+
+export type AxiosResult = Promise<AxiosResponse | AxiosError>;
+export type GetProductPage = (link: string) => AxiosResult;

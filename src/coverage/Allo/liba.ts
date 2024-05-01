@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { ProductParseResult } from './types';
+import { AxiosResult, GetProductPage, ProductParseResult } from './types';
 import {
   getFirstGroup,
   notAxiosError,
@@ -12,31 +12,6 @@ import { unavailableLinkService } from '../../database/services/unavailable-link
 import { ARCHIVED_LINK, AVAILABLE_LINK, UNAVAILABLE_LINK } from './constants';
 import { productService } from '../../database/services/product.service';
 import Bottleneck from 'bottleneck';
-
-// const saveLink = async (
-//   url: string,
-//   { productAvailability }: ProductJSON,
-//   siteName: string
-// ): Promise<void> => {
-//   const siteId = await siteService.findByName(siteName);
-
-//   switch (productAvailability) {
-//     case ARCHIVED_LINK:
-//       await archivedLinkService.save({
-//         url,
-//         site: siteId,
-//       });
-//       break;
-//     case UNAVAILABLE_LINK:
-//       await unavailableLinkService.save({
-//         url,
-//         site: siteId,
-//       });
-//       break;
-//     default:
-//       throw new Error('No one case found for: ' + productAvailability);
-//   }
-// };
 
 export const processBodyResponse = (res: AxiosResponse): ProductParseResult => {
   try {
@@ -59,9 +34,6 @@ export const processBodyResponse = (res: AxiosResponse): ProductParseResult => {
     throw new Error(`processBodyResponse: ${e}`);
   }
 };
-
-type AxiosResult = Promise<AxiosResponse | AxiosError>;
-type GetProductPage = (link: string) => AxiosResult;
 
 export const getProductPage: GetProductPage = async (url) => {
   try {
@@ -100,14 +72,14 @@ const filterExistingLinks = async (links: string[]): Promise<string[]> => {
 
 const makeQueue = (
   links: string[],
-  taskFunc: GetProductPage
+  processLink: GetProductPage
 ): AxiosResult[] => {
   const limiter = new Bottleneck({
     maxConcurrent: 5,
     minTime: 200,
   });
 
-  return links.map((x) => limiter.schedule(() => taskFunc(x)));
+  return links.map((x) => limiter.schedule(() => processLink(x)));
 };
 
 export const scrapProducts = async (
@@ -137,21 +109,21 @@ export const scrapProducts = async (
         const data = await Promise.all(makeQueue(arr, getProductPage));
 
         console.timeEnd('180 requests');
-        console.time('180 proccessed');
-        const proccessedData = data
+        console.time('180 processed');
+        const processedData = data
           .filter(notAxiosError)
           .map(processBodyResponse)
           .filter(notEmpty);
-        console.timeEnd('180 proccessed');
+        console.timeEnd('180 processed');
 
         const [archivedProducts, unavailebleProducts, availableProducts] = [
-          proccessedData.filter(
+          processedData.filter(
             ({ product }) => product.productAvailability === ARCHIVED_LINK
           ),
-          proccessedData.filter(
+          processedData.filter(
             ({ product }) => product.productAvailability === UNAVAILABLE_LINK
           ),
-          proccessedData.filter(
+          processedData.filter(
             ({ product }) => product.productAvailability === AVAILABLE_LINK
           ),
         ];
@@ -191,4 +163,6 @@ export const scrapProducts = async (
   } catch (e) {
     console.log(e);
   }
+
+  console.log('end');
 };
