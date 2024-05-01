@@ -32,6 +32,13 @@ class ProductService {
   //     throw new Error('Smth wrong with findByName: ' + e);
   //   }
   // }
+  findAll(urls: string[]): Promise<ProductDto[]> {
+    try {
+      return this.productModel.find().where('url').in(urls).lean().exec();
+    } catch (e) {
+      throw new Error('Failed to findAll available link: ' + e);
+    }
+  }
 
   async save(data: ProductDto): Promise<void> {
     try {
@@ -47,7 +54,7 @@ class ProductService {
   async saveAll(data: ProductDto[]): Promise<void> {
     try {
       await this.productModel.bulkWrite(
-        data.map(product => ({
+        data.map((product) => ({
           updateOne: {
             filter: { id: product.id },
             update: { $set: product },

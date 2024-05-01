@@ -10,7 +10,7 @@ class TestService {
   saveAll(data: TestDto[]): Promise<any> {
     try {
       return this.testModel.bulkWrite(
-        data.map(el => ({
+        data.map((el) => ({
           updateOne: {
             filter: { name: el.name },
             update: { $set: el },
@@ -25,11 +25,7 @@ class TestService {
 
   findAll(urls: string[]): Promise<TestDto[]> {
     try {
-      return this.testModel
-        .find()
-        .where('url')
-        .in(urls)
-        .exec();
+      return this.testModel.find().where('url').in(urls).exec();
     } catch (e) {
       throw new Error('Failed to create test: ' + e);
     }

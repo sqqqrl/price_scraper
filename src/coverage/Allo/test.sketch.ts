@@ -77,3 +77,7 @@
 //       throw new Error('No one case found for: ' + productAvailability);
 //   }
 // };
+
+// const testLink = [
+//   'https://allo.ua/ru/products/mobile/samsung-c170-6227.html',
+// ];

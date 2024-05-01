@@ -14,6 +14,8 @@ export const initSiteCollection = async ({
         url,
       });
     }
+
+    global.siteId = await siteService.findByName(siteName);
   } catch (e) {
     console.log('INIT DB ERROR: ' + e);
   }
@@ -21,17 +23,12 @@ export const initSiteCollection = async ({
   return;
 };
 
-export const start = async ({
-  xmlFolder,
-  siteName,
-}: SuiteProperties): Promise<void> => {
+export const start = async ({ xmlFolder }: SuiteProperties): Promise<void> => {
   // const productLinks = parseXmls(xmlFolder).flat();
   const productLinks = parseXmlByFilename(xmlFolder, 'sitemap1.xml');
 
-  //set site object id to global
-  global.siteId = await siteService.findByName(siteName);
-
-  await scrapProducts(productLinks, siteName);
+  await scrapProducts(productLinks);
+  console.log('------- scrapping ends ---------');
 
   return;
 };
