@@ -44,5 +44,7 @@ export const notEmpty = <TValue>(
   value: TValue | null | undefined
 ): value is TValue => value !== null && value !== undefined;
 
-export const notAxiosError = <T>(element: T | AxiosError): element is T =>
-  !isAxiosError(element);
+export const notAxiosError = <T>(element: T | AxiosError): element is T => {
+  console.log(element);
+  return !isAxiosError(element);
+};

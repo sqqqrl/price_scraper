@@ -16,9 +16,10 @@ export const scrapArhivesWithProductLinks = async ({
       await getArchiveLinks({
         sitemapUrl,
         HTMLContainer: 'body > div#webkit-xml-viewer-source-xml',
-        regex: /https:\/\/allo\.ua\/map\/secure\/products\/sitemap\d+\.xml\.gz/g,
+        regex:
+          /https:\/\/allo\.ua\/map\/secure\/products\/sitemap\d+\.xml\.gz/g,
       })
-    ).forEach(archiveLink => archiveLinks.push(archiveLink));
+    ).forEach((archiveLink) => archiveLinks.push(archiveLink));
   } catch (err) {
     console.log(err);
   }
@@ -26,17 +27,17 @@ export const scrapArhivesWithProductLinks = async ({
   return archiveLinks;
 };
 
-export const downloadSitemaps = (func: ScrapArhivesWithProductLinks) => async (
-  props: SuiteProperties
-): Promise<void> => {
-  const links = await func(props);
-  for (const url of links) {
-    const archiveName = url.match(/sitemap\d+\.xml/);
-    if (archiveName == null) throw new Error(`mb its not sitemap?????`);
+export const downloadSitemaps =
+  (func: ScrapArhivesWithProductLinks) =>
+  async (props: SuiteProperties): Promise<void> => {
+    const links = await func(props);
+    for (const url of links) {
+      const archiveName = url.match(/sitemap\d+\.xml/);
+      if (archiveName == null) throw new Error(`mb its not sitemap?????`);
 
-    await downloadAndExtactArchive(
-      url,
-      `${xmlFolderPath}/allo/${archiveName[0]}`
-    );
-  }
-};
+      await downloadAndExtactArchive(
+        url,
+        `${xmlFolderPath}/allo/${archiveName[0]}`
+      );
+    }
+  };
