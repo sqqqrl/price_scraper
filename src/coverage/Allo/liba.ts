@@ -85,8 +85,8 @@ const makeQueue = (
   processLink: GetProductPage
 ): AxiosResult[] => {
   const limiter = new Bottleneck({
-    maxConcurrent: 5,
-    minTime: 200,
+    maxConcurrent: 3,
+    minTime: 333,
   });
 
   return links.map((x) => limiter.schedule(() => processLink(x)));
@@ -97,7 +97,7 @@ export const scrapProducts = async (productLinks: string[]): Promise<void> => {
 
   console.log('notExistingLinks count: ' + notExistingLinks.length);
 
-  // 5 request in sec (at this time)
+  // ~3 request in sec (at this time)
   const step = 180;
   const splittedArrays = Array.from({ length: notExistingLinks.length }, () =>
     notExistingLinks.splice(-step)
