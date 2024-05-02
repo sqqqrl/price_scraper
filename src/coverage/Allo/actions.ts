@@ -1,5 +1,5 @@
 import { siteService } from '../../database/services/site.service';
-import { parseXmlByFilename } from '../../liba/parseXML';
+import { parseXmls } from '../../liba/parseXML';
 import { SuiteProperties } from '../../liba/wrappers/suite';
 import { scrapProducts } from './liba';
 
@@ -25,9 +25,12 @@ export const initSiteCollection = async ({
 
 export const start = async ({ xmlFolder }: SuiteProperties): Promise<void> => {
   // const productLinks = parseXmls(xmlFolder).flat();
-  const productLinks = parseXmlByFilename(xmlFolder, 'sitemap1.xml');
+  const sitemaps = parseXmls(xmlFolder);
 
-  await scrapProducts(productLinks);
+  for (const sitemap of sitemaps) {
+    await scrapProducts(sitemap);
+  }
+
   console.log('------- scrapping ends ---------');
 
   return;

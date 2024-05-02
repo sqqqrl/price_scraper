@@ -5,7 +5,7 @@ export const parseXmls = (xmlFolderPath: string): string[][] => {
   if (!existsSync(xmlFolderPath))
     throw new Error(`Folder "${xmlFolderPath}" is not exist.`);
 
-  const files = readdirSync(xmlFolderPath).map(fileName =>
+  const files = readdirSync(xmlFolderPath).map((fileName) =>
     readFileSync(`${xmlFolderPath}/${fileName}`, 'utf-8')
   );
 
@@ -15,7 +15,7 @@ export const parseXmls = (xmlFolderPath: string): string[][] => {
     for (const file of files) {
       parseString(file, (err, res) => {
         if (err) throw new Error(`${err}`);
-        return urls.push(res.urlset.url.map(el => el?.loc.shift()));
+        return urls.push(res.urlset.url.map((el) => el?.loc.shift()));
       });
     }
 
@@ -38,7 +38,7 @@ export const parseXmlByFilename = (
     let urls: string[] = [];
     parseString(file, (err, res) => {
       if (err) throw new Error(`${err}`);
-      urls = res.urlset.url.map(el => el?.loc.shift());
+      urls = res.urlset.url.map((el) => el?.loc.shift());
       return;
     });
 
