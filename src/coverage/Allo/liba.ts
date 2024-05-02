@@ -46,7 +46,6 @@ export const getProductPage: GetProductPage = async (url) => {
     return await axios.get(url, {
       maxRedirects: 0,
       headers: {
-        'User-Agent': 'python-requests/2.26.0',
         'Accept-Encoding': 'gzip, deflate',
         Accept: '*/*',
         Connection: 'keep-alive',
