@@ -117,16 +117,23 @@ export const scrapProducts = async (productLinks: string[]): Promise<void> => {
     notExistingLinks.splice(-step)
   );
 
+  let scrapedLinks = 0;
+  let timeSpent = 0;
+  let loopCount = 0;
+
   for (const arr of splittedArrays) {
     try {
+      loopCount = loopCount + 1;
       console.time('-------------------- one loop ---------------------------');
-
+      const perfStart = performance.now();
       console.time('180 requests');
       const data = (await Promise.all(makeQueue(arr, getProductPage)))
         .filter(notAxiosError)
         .map(processBodyResponse)
         .filter(notEmpty);
       console.log(data.length);
+      scrapedLinks = scrapedLinks + data.length;
+      console.log(`scrapedLinks: ${scrapedLinks}`);
       console.timeEnd('180 requests');
 
       const [archivedProducts, unavailebleProducts, availableProducts] = [
@@ -141,7 +148,6 @@ export const scrapProducts = async (productLinks: string[]): Promise<void> => {
         ),
       ];
 
-      console.time('save 180 items');
       await archivedLinkService.saveAll(
         archivedProducts.map((product) => ({
           url: product.url,
@@ -161,7 +167,11 @@ export const scrapProducts = async (productLinks: string[]): Promise<void> => {
           site: global.siteId,
         }))
       );
-      console.timeEnd('save 180 items');
+
+      const perfEnd = performance.now();
+      timeSpent = timeSpent + (perfEnd - perfStart);
+      console.log(`total timeSpent: ${timeSpent}`);
+      console.log(loopCount);
 
       console.timeEnd(
         '-------------------- one loop ---------------------------'
