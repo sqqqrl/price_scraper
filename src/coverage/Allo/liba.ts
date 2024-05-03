@@ -99,8 +99,8 @@ const makeQueue = (
   processLink: GetProductPage
 ): AxiosResult[] => {
   const limiter = new Bottleneck({
-    maxConcurrent: 10,
-    minTime: 333,
+    maxConcurrent: 20,
+    minTime: 200,
   });
 
   return links.map((x) => limiter.schedule(() => processLink(x)));
