@@ -4,6 +4,7 @@
     "allowUnusedLabels": false,
     "declaration": true,
     "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
     "lib": [
       "esnext",
       "dom"

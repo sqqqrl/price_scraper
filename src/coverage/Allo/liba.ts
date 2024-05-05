@@ -120,6 +120,8 @@ export const scrapProducts = async (productLinks: string[]): Promise<void> => {
   for (const arr of splittedArrays) {
     try {
       console.time('-------------------- one loop ---------------------------');
+      // const kekw = await startPup(arr);
+      // console.log(kekw);
 
       console.time('180 requests');
       const data = (await Promise.all(makeQueue(arr, getProductPage)))

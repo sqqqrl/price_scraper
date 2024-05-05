@@ -1,4 +1,4 @@
-import * as yargs from 'yargs';
+import yargs from 'yargs';
 import { CliOptions } from '../types/Options';
 
 export const argv = yargs(process.argv.slice(2))

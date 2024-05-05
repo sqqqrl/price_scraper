@@ -32,6 +32,8 @@
     "mongoose": "^8.3.2",
     "node-gzip": "^1.1.2",
     "puppeteer": "^19.7.1",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
     "throttled-queue": "^2.1.4",
     "true-myth": "^4.0.0",
     "typescript": "^5.4.5",
