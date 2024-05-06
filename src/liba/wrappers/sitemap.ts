@@ -15,7 +15,7 @@ export const getArchiveLinks = async ({
   await page.goto(sitemapUrl);
   await page.waitForSelector('body');
 
-  const html = await page.$eval(HTMLContainer, selector => {
+  const html = await page.$eval(HTMLContainer, (selector) => {
     return selector.outerHTML;
   });
 
