@@ -11,6 +11,7 @@ import { unavailableLinkService } from '../../database/services/unavailable-link
 import { ARCHIVED_LINK, AVAILABLE_LINK, UNAVAILABLE_LINK } from './constants';
 import { productService } from '../../database/services/product.service';
 import Bottleneck from 'bottleneck';
+import { startPup } from './puppeteer';
 
 export const processBodyResponse = (
   res: AxiosResponse
@@ -46,11 +47,11 @@ export const getProductPage: GetProductPage = async (url) => {
     return await axios.get(url, {
       maxRedirects: 0,
       headers: {
-        authority: 'allo.ua',
+        // authority: 'allo.ua',
         'cache-control': 'max-age=0',
-        'upgrade-insecure-requests': '1',
-        'user-agent':
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.106 Safari/537.36',
+        // 'upgrade-insecure-requests': '1',
+        // 'user-agent':
+        //   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.106 Safari/537.36',
         'sec-fetch-dest': 'document',
         accept:
           'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
@@ -99,8 +100,8 @@ const makeQueue = (
   processLink: GetProductPage
 ): AxiosResult[] => {
   const limiter = new Bottleneck({
-    maxConcurrent: 10,
-    minTime: 333,
+    maxConcurrent: 1,
+    minTime: 1000,
   });
 
   return links.map((x) => limiter.schedule(() => processLink(x)));
@@ -120,8 +121,8 @@ export const scrapProducts = async (productLinks: string[]): Promise<void> => {
   for (const arr of splittedArrays) {
     try {
       console.time('-------------------- one loop ---------------------------');
-      // const kekw = await startPup(arr);
-      // console.log(kekw);
+      const kekw = await startPup(arr);
+      console.log(kekw);
 
       console.time('180 requests');
       const data = (await Promise.all(makeQueue(arr, getProductPage)))
