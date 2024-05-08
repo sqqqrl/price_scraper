@@ -33,22 +33,17 @@ export const getArchiveLinks = async ({
 export const downloadAndExtactArchive = async (
   url: string,
   path: string
-): Promise<void> => {
-  try {
-    await writeFile(
-      typeChecker(
-        isArrayBuffer,
-        await downloadFile({
-          url,
-          method: 'GET',
-          responseType: 'arraybuffer',
-          maxContentLength: Infinity,
-        }),
-        'Wrong downloaded data'
-      ),
-      path
-    );
-  } catch (err) {
-    console.log(err);
-  }
-};
+): Promise<void> =>
+  await writeFile(
+    typeChecker(
+      isArrayBuffer,
+      await downloadFile({
+        url,
+        method: 'GET',
+        responseType: 'arraybuffer',
+        maxContentLength: Infinity,
+      }),
+      'Wrong downloaded data'
+    ),
+    path
+  );

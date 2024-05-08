@@ -10,9 +10,10 @@ import { controller } from './liba/controller';
   const importedSuite = (await getExport(suite)).default.suite;
   configs.headless = headless;
 
-  const start = controller([importedSuite]);
+  const start = await controller([importedSuite]);
   console.log(start);
 
+  throw new Error('end');
   // try {
   //   await sitemapMain(false);
   //   // const urls = parseXmls();

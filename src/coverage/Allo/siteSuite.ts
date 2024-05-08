@@ -1,6 +1,6 @@
 import { xmlFolderPath } from '../../config';
 import { Suite } from '../../liba/wrappers/suite';
-import { initSiteCollection, start } from './actions';
+import { initSiteCollection } from './actions';
 
 const suite = new Suite({
   siteName: 'Allo',
@@ -9,8 +9,8 @@ const suite = new Suite({
   xmlFolder: xmlFolderPath + 'allo/',
 }).actions([
   initSiteCollection,
-  // downloadSitemaps(scrapArhivesWithProductLinks),
-  start,
+  // downloadSitemaps(sitemapScrapper, 'categories'),
+  // start,
 ]);
 
 export default {

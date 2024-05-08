@@ -11,10 +11,10 @@ const start = async (suite: Suite): SuiteReport => {
   }
 };
 
-export const controller = (suites: Suite[]): SuiteReport[] => {
+export const controller = async (suites: Suite[]): Promise<SuiteReport[]> => {
   const suiteReports: SuiteReport[] = [];
   for (const suite of suites) {
-    const report = start(suite);
+    const report = await start(suite);
     suiteReports.push(report);
   }
 

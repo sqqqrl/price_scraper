@@ -1,6 +1,7 @@
-import { writeFileSync } from 'fs';
+import { writeFileSync, mkdirSync } from 'fs';
 import { CheckerFunc } from '../types/TypeChecker';
 import axios, { AxiosRequestConfig } from 'axios';
+import { dirname } from 'path';
 
 export const typeChecker = (f: CheckerFunc, data: any, err: string): any => {
   const check = f(data);
@@ -26,10 +27,11 @@ export const downloadFile = async (
 
 export const writeFile = async (
   data: ArrayBuffer,
-  path: string
+  filePath: string
 ): Promise<void> => {
   try {
-    writeFileSync(path, data.toString());
+    mkdirSync(dirname(filePath), { recursive: true });
+    writeFileSync(filePath, data.toString());
   } catch (err) {
     throw new Error(`${err}`);
   }
