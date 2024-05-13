@@ -7,6 +7,7 @@ import { setTimeout } from 'node:timers/promises';
 import { ProductDto } from '../../../database/models/product_allo.model';
 import { productServiceAllo } from '../../../database/services/product_allo.service';
 import { ProductList } from '../types';
+import { logger } from '../../../liba/logger';
 
 puppeteer.use(StealthPlugin());
 puppeteer.use(anonymizeUa());
@@ -67,14 +68,23 @@ const scrapProducts = async (link: string): Promise<ProductDto[]> => {
 export const processLinks = async (links: string[]): Promise<void> => {
   for (const link of links) {
     try {
-      console.log(link);
+      logger.log(
+        'info',
+        `------------ ${links.indexOf(link) + 1} of ${links.length} category processing ------------`
+      );
+      logger.log('info', `---- Starting scrap category link: ${link} ----`);
       const a = performance.now();
       const products = await scrapProducts(link);
       const b = performance.now();
-      console.log(b - a);
+      logger.log('info', `time spent on scrap === ${b - a}`);
+      logger.log(
+        'info',
+        `start saving products info in db. count: ${products.length}`
+      );
       await productServiceAllo.saveAll(products);
+      logger.log('info', 'complete saving');
     } catch (err) {
-      if (err) throw new Error(`${err}`);
+      logger.error('error', new Error(`${err}`));
     }
   }
   return;
