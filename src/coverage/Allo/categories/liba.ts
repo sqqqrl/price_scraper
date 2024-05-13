@@ -39,6 +39,8 @@ const scrapProducts = async (link: string): Promise<ProductDto[]> => {
         `window.__ALLO__.state['catalog/category/product-list']`
       )) as ProductList;
 
+      logger.info('info', { data: { pagination, products } });
+
       result.push(
         ...products.map((product) => ({
           id: product.id,
