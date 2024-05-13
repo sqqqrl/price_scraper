@@ -38,8 +38,13 @@ const scrapProducts = async (link: string): Promise<ProductDto[]> => {
       const { pagination, products } = (await defaultPage.evaluate(
         `window.__ALLO__.state['catalog/category/product-list']`
       )) as ProductList;
-
       logger.info('info', { data: { pagination } });
+
+      if (!pagination || !products) {
+        logger.error('error', new Error('Category page is emptry'));
+        isEnd = true;
+        break;
+      }
 
       result.push(
         ...products.map((product) => ({
@@ -74,7 +79,6 @@ const scrapProducts = async (link: string): Promise<ProductDto[]> => {
 export const processLinks = async (links: string[]): Promise<void> => {
   for (const link of links) {
     try {
-      logger.error('error', new Error('rlerlw'));
       logger.log(
         'info',
         `${links.indexOf(link) + 1} of ${links.length} category processing.`
