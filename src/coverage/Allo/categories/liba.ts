@@ -95,8 +95,22 @@ const scrapProducts = async (link: string): Promise<ProductDto[]> => {
   return result;
 };
 
+//if a category was scrapped earlier, the function will remove it from the array
+const filterExistingCategories = async (links: string[]): Promise<string[]> => {
+  const exists = (await categoryService.findAll(links)).map(
+    (category) => category.url
+  );
+
+  return links.filter((link) => !exists.includes(link));
+};
+
 export const processLinks = async (links: string[]): Promise<void> => {
-  for (const link of links) {
+  //TODO: add a feature in cli (--update) to "rescrap" categories
+  const update = false;
+
+  const categoryLinks = update ? links : await filterExistingCategories(links);
+
+  for (const link of categoryLinks) {
     try {
       logger.log(
         'info',
