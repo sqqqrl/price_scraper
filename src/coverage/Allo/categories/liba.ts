@@ -111,10 +111,10 @@ export const processLinks = async (links: string[]): Promise<void> => {
   const update = false;
 
   const categoryLinks = update ? links : await filterExistingCategories(links);
+  const browser = await puppeteer.launch(configs);
 
   for (const link of categoryLinks) {
     try {
-      const browser = await puppeteer.launch(configs);
       logger.log(
         'info',
         `${links.indexOf(link) + 1} of ${links.length} category processing.`
@@ -139,10 +139,10 @@ export const processLinks = async (links: string[]): Promise<void> => {
       });
 
       logger.log('info', 'Complete saving');
-      await browser.close();
     } catch (err) {
       logger.error('error', new Error(`${err}`));
     }
   }
+  await browser.close();
   return;
 };
