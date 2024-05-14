@@ -88,7 +88,7 @@ const scrapProducts = async (link: string): Promise<ProductDto[]> => {
       });
       await setTimeout(randTimeout(2000, 3500));
     } catch (err) {
-      logger.error('error', new Error(`${err}`));
+      throw new Error(`${err}`);
     }
   }
 
