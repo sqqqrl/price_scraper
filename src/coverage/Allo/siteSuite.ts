@@ -1,7 +1,6 @@
 import { xmlFolderPath } from '../../config';
 import { Suite } from '../../liba/wrappers/suite';
-import { initSiteCollection } from './actions';
-import { start } from './products';
+import { initSiteCollection, start } from './actions';
 
 const suite = new Suite({
   siteName: 'Allo',

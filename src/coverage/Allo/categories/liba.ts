@@ -8,30 +8,49 @@ import { ProductDto } from '../../../database/models/product_allo.model';
 import { productServiceAllo } from '../../../database/services/product_allo.service';
 import { ProductList } from '../types';
 import { logger } from '../../../liba/logger';
+import { categoryService } from '../../../database/services/category.service';
+import { randTimeout } from '../utils';
 
+// set up plugins
 puppeteer.use(StealthPlugin());
 puppeteer.use(anonymizeUa());
 
 const genUA = (): string =>
   new UserAgent({ deviceCategory: 'desktop' }).toString();
 
-const randTimeout = (min: number, max: number): number =>
-  Math.floor(Math.random() * (max - min) + min);
+//TODO: refactor. too dangerous
+export const filterDublicateCategories = (links: string[]): string[] => {
+  const splitted = links.map((el) => el.split('/').filter((el) => el !== ''));
+  const categories = splitted.reduce((prev, next) => {
+    if (!prev.includes(next[next.length - 1])) {
+      prev.push(next[next.length - 1]);
+    }
+    return prev;
+  }, []);
+
+  const main = categories.map((el) =>
+    splitted
+      .filter((arr) => arr.find((kek) => kek === el))
+      .reduce((prev, next) => (prev.length > next.length ? next : prev))
+  );
+
+  return main.map((el) => el.join('/').replace(':', ':/'));
+};
 
 const scrapProducts = async (link: string): Promise<ProductDto[]> => {
-  const browser = await puppeteer.launch(configs);
-  const defaultPage = (await browser.pages())[0];
-
-  await defaultPage.setUserAgent(genUA());
   const result: ProductDto[] = [];
 
+  const browser = await puppeteer.launch(configs);
+
+  const defaultPage = (await browser.pages())[0];
+  await defaultPage.setUserAgent(genUA());
   await defaultPage.goto(link, {
     waitUntil: 'domcontentloaded',
   });
+
   await setTimeout(randTimeout(2000, 3500));
 
   let isEnd = false;
-
   while (!isEnd) {
     // scrap products info from state
     try {
@@ -41,7 +60,7 @@ const scrapProducts = async (link: string): Promise<ProductDto[]> => {
       logger.info('info', { data: { pagination } });
 
       if (!pagination || !products) {
-        logger.error('error', new Error('Category page is emptry'));
+        logger.error('error', new Error('Category page is empty'));
         isEnd = true;
         break;
       }
@@ -84,15 +103,24 @@ export const processLinks = async (links: string[]): Promise<void> => {
         `${links.indexOf(link) + 1} of ${links.length} category processing.`
       );
       logger.log('info', `Starting scrap category link: ${link}`);
+
       const a = performance.now();
       const products = await scrapProducts(link);
       const b = performance.now();
+
       logger.log('info', `time spent on scrap: ${b - a}`);
       logger.log(
         'info',
         `Start saving products info in db. Count: ${products.length}`
       );
+
       await productServiceAllo.saveAll(products);
+      await categoryService.save({
+        url: link,
+        site: global.siteId,
+        scrappedBefore: true,
+      });
+
       logger.log('info', 'Complete saving');
     } catch (err) {
       logger.error('error', new Error(`${err}`));

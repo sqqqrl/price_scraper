@@ -1,7 +1,8 @@
 import { siteService } from '../../database/services/site.service';
-import { parseXmls } from '../../liba/parseXML';
+import { parseXmlByFilename } from '../../liba/parseXML';
 import { SuiteProperties } from '../../liba/wrappers/suite';
-import { scrapProducts } from './liba';
+import { filterDublicateCategories, processLinks } from './categories/liba';
+import { CATEGORIES_FOLDER } from './constants';
 
 export const initSiteCollection = async ({
   siteName,
@@ -24,14 +25,24 @@ export const initSiteCollection = async ({
 };
 
 export const start = async ({ xmlFolder }: SuiteProperties): Promise<void> => {
-  // const productLinks = parseXmls(xmlFolder).flat();
-  const sitemaps = parseXmls(xmlFolder);
+  // the first sitemap (#1, mb #101, #201, #301, #401, #501, #601 and #701 ) consists of clear categories
+  // without filter(like discount/brand etc..)
+  // so it make sense scrap only them
 
-  for (const sitemap of sitemaps) {
-    await scrapProducts(sitemap);
+  // TODO: some fixes after research more about them
+  const mainSitemaps = [1, 101, 201, 301, 401, 501, 601, 701];
+
+  const results: string[][] = [];
+  for (const number of mainSitemaps) {
+    const sitemap = parseXmlByFilename(
+      xmlFolder + CATEGORIES_FOLDER,
+      `sitemap${number}.xml`
+    );
+
+    results.push(filterDublicateCategories(sitemap));
   }
 
-  console.log('------- scrapping ends ---------');
+  await processLinks(results.flat());
 
   return;
 };
