@@ -10,6 +10,7 @@ import { ProductList } from '../types';
 import { logger } from '../../../liba/logger';
 import { categoryService } from '../../../database/services/category.service';
 import { randTimeout } from '../utils';
+import { Browser } from 'puppeteer';
 
 // set up plugins
 puppeteer.use(StealthPlugin());
@@ -37,10 +38,11 @@ export const filterDublicateCategories = (links: string[]): string[] => {
   return main.map((el) => el.join('/').replace(':', ':/'));
 };
 
-const scrapProducts = async (link: string): Promise<ProductDto[]> => {
+const scrapProducts = async (
+  browser: Browser,
+  link: string
+): Promise<ProductDto[]> => {
   const result: ProductDto[] = [];
-
-  const browser = await puppeteer.launch(configs);
 
   const defaultPage = (await browser.pages())[0];
   await defaultPage.setUserAgent(genUA());
@@ -112,6 +114,7 @@ export const processLinks = async (links: string[]): Promise<void> => {
 
   for (const link of categoryLinks) {
     try {
+      const browser = await puppeteer.launch(configs);
       logger.log(
         'info',
         `${links.indexOf(link) + 1} of ${links.length} category processing.`
@@ -119,7 +122,7 @@ export const processLinks = async (links: string[]): Promise<void> => {
       logger.log('info', `Starting scrap category link: ${link}`);
 
       const a = performance.now();
-      const products = await scrapProducts(link);
+      const products = await scrapProducts(browser, link);
       const b = performance.now();
 
       logger.log('info', `time spent on scrap: ${b - a}`);
@@ -136,6 +139,7 @@ export const processLinks = async (links: string[]): Promise<void> => {
       });
 
       logger.log('info', 'Complete saving');
+      await browser.close();
     } catch (err) {
       logger.error('error', new Error(`${err}`));
     }
