@@ -25,11 +25,15 @@ export const initSiteCollection = async ({
 };
 
 export const start = async ({ xmlFolder }: SuiteProperties): Promise<void> => {
-  // the first sitemap (#1, mb #101, #201, #301, #401, #501, #601 and #701 ) consists of clear categories
+  // the first sitemap (#1, #101, #201, #301, #401, #501, #601 and #701 ) consists of clear categories
   // without filter(like discount/brand etc..)
   // so it make sense scrap only them
 
   // TODO: some fixes after research more about them
+  // research:
+  //    each clear category can reproduce a maximum of 1400 products (in many ways this is not complete information)
+  //    so still need other sitemaps with filtres
+
   const mainSitemaps = [1, 101, 201, 301, 401, 501, 601, 701];
 
   const results: string[][] = [];
