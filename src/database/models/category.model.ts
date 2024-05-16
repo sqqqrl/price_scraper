@@ -10,13 +10,13 @@ import {
 interface Category extends Document {
   readonly url: string;
   readonly site: ObjectId;
-  readonly scrappedBefore: boolean;
+  readonly supplementable: boolean;
 }
 
 interface CategoryDto {
   readonly url: string;
   readonly site: ObjectId;
-  readonly scrappedBefore: boolean;
+  readonly supplementable: boolean;
 }
 
 type CategoryModel = Model<Category>;
@@ -25,7 +25,7 @@ const CategorySchema = new Schema<Category>(
   {
     url: SchemaTypes.String,
     site: { type: SchemaTypes.ObjectId, ref: 'sites' },
-    scrappedBefore: SchemaTypes.Boolean,
+    supplementable: SchemaTypes.Boolean,
   },
   {
     timestamps: true,

@@ -135,7 +135,7 @@ export const processLinks = async (links: string[]): Promise<void> => {
       await categoryService.save({
         url: link,
         site: global.siteId,
-        scrappedBefore: true,
+        supplementable: products.length === 1400,
       });
 
       logger.log('info', 'Complete saving');
