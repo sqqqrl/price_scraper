@@ -6,11 +6,11 @@ import UserAgent from 'user-agents';
 import { setTimeout } from 'node:timers/promises';
 import { ProductDto } from '../../../database/models/product_allo.model';
 import { productServiceAllo } from '../../../database/services/product_allo.service';
-import { ProductList } from '../types';
+import { ProductList } from './types';
 import { logger } from '../../../liba/logger';
 import { categoryService } from '../../../database/services/category.service';
-import { randTimeout } from '../utils';
 import { Browser } from 'puppeteer';
+import { randTimeout } from '../../../utils';
 
 // set up plugins
 puppeteer.use(StealthPlugin());

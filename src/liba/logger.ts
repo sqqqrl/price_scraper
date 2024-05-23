@@ -19,10 +19,10 @@ export const logger = createLogger({
     timestamp({
       format: 'YYYY-MM-DD HH:mm:ss',
     }),
+    formatDebugger(),
     json(),
     simple(),
     colorize({ all: true }),
-    formatDebugger(),
     printf(
       (info) =>
         ` ${info.label}  ${info.timestamp}  ${info.level} : ${info.message}`

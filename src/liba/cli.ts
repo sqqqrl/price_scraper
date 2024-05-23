@@ -1,7 +1,9 @@
+#!/usr/bin/env node
 import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 import { CliOptions } from '../types/Options';
 
-export const argv = yargs(process.argv.slice(2))
+export const argv = yargs(hideBin(process.argv))
   .option('suite', {
     alias: 's',
     describe: 'provide a path to site suite',

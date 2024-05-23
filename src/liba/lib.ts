@@ -2,8 +2,13 @@ import { writeFileSync, mkdirSync } from 'fs';
 import { CheckerFunc } from '../types/TypeChecker';
 import axios, { AxiosRequestConfig } from 'axios';
 import { dirname } from 'path';
+import { isArrayBuffer } from '../utils';
 
-export const typeChecker = (f: CheckerFunc, data: any, err: string): any => {
+export const typeChecker = (
+  f: CheckerFunc,
+  data: unknown,
+  err: string
+): any => {
   const check = f(data);
   if (check) {
     return data;
@@ -12,7 +17,25 @@ export const typeChecker = (f: CheckerFunc, data: any, err: string): any => {
   throw new Error(err);
 };
 
-export const downloadFile = async (
+export const downloadAndExtactArchive = async (
+  url: string,
+  path: string
+): Promise<void> =>
+  await writeFile(
+    typeChecker(
+      isArrayBuffer,
+      await downloadFile({
+        url,
+        method: 'GET',
+        responseType: 'arraybuffer',
+        maxContentLength: Infinity,
+      }),
+      'Wrong downloaded data'
+    ),
+    path
+  );
+
+const downloadFile = async (
   options: AxiosRequestConfig
 ): Promise<ArrayBuffer | void> => {
   try {
@@ -25,7 +48,7 @@ export const downloadFile = async (
   }
 };
 
-export const writeFile = async (
+const writeFile = async (
   data: ArrayBuffer,
   filePath: string
 ): Promise<void> => {

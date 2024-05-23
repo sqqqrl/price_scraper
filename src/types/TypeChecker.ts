@@ -1,1 +1,1 @@
-export type CheckerFunc = (data: any) => boolean;
+export type CheckerFunc = (data: unknown) => boolean;

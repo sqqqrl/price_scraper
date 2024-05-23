@@ -1,8 +1,6 @@
 import puppeteer from 'puppeteer';
-import { SitemapConfig } from '../../types/Sitemap';
-import { configs } from '../../puppeteer.config';
-import { isArrayBuffer } from '../../utils';
-import { writeFile, typeChecker, downloadFile } from '../lib';
+import { configs } from '../puppeteer.config';
+import { SitemapConfig } from '../types/Sitemap';
 
 export const getArchiveLinks = async ({
   sitemapUrl,
@@ -29,21 +27,3 @@ export const getArchiveLinks = async ({
 
   return links;
 };
-
-export const downloadAndExtactArchive = async (
-  url: string,
-  path: string
-): Promise<void> =>
-  await writeFile(
-    typeChecker(
-      isArrayBuffer,
-      await downloadFile({
-        url,
-        method: 'GET',
-        responseType: 'arraybuffer',
-        maxContentLength: Infinity,
-      }),
-      'Wrong downloaded data'
-    ),
-    path
-  );

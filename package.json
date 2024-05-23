@@ -7,7 +7,7 @@
     "compile": "npx tsc -p ./tsconfig.json --skipLibCheck",
     "lint": "npx eslint src/**/*.ts --fix",
     "start": "npm run compile && node ./lib/src/main.js",
-    "parseXml": "npm run compile && node ./lib/src/liba/parseXML.js"
+    "getSitemaps": "npm run compile && node ./lib/src/sitemap/sitemaps.js"
   },
   "author": "",
   "license": "ISC",

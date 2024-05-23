@@ -25,7 +25,6 @@ export const parseXmls = (xmlFolderPath: string): string[][] => {
   }
 };
 
-//parse xml by filename for debugging
 export const parseXmlByFilename = (
   xmlFolderPath: string,
   fileName: string

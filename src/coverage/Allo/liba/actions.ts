@@ -1,8 +1,7 @@
-import { siteService } from '../../database/services/site.service';
-import { parseXmlByFilename } from '../../liba/parseXML';
-import { SuiteProperties } from '../../liba/wrappers/suite';
-import { filterDublicateCategories, processLinks } from './categories/liba';
-import { CATEGORIES_FOLDER } from './constants';
+import { siteService } from '../../../database/services/site.service';
+import { parseXmlByFilename } from '../../../liba/parseXML';
+import { SuiteProperties } from '../../../liba/wrappers/suite';
+import { filterDublicateCategories, processLinks } from './categories';
 
 export const initSiteCollection = async ({
   siteName,
@@ -38,10 +37,7 @@ export const start = async ({ xmlFolder }: SuiteProperties): Promise<void> => {
 
   const results: string[][] = [];
   for (const number of mainSitemaps) {
-    const sitemap = parseXmlByFilename(
-      xmlFolder + CATEGORIES_FOLDER,
-      `sitemap${number}.xml`
-    );
+    const sitemap = parseXmlByFilename(xmlFolder, `sitemap${number}.xml`);
 
     results.push(filterDublicateCategories(sitemap));
   }
