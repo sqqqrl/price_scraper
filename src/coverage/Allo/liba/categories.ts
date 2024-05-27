@@ -19,23 +19,17 @@ puppeteer.use(anonymizeUa());
 const genUA = (): string =>
   new UserAgent({ deviceCategory: 'desktop' }).toString();
 
-//TODO: refactor. too dangerous
-export const filterDublicateCategories = (links: string[]): string[] => {
-  const splitted = links.map((el) => el.split('/').filter((el) => el !== ''));
-  const categories = splitted.reduce((prev, next) => {
-    if (!prev.includes(next[next.length - 1])) {
-      prev.push(next[next.length - 1]);
-    }
-    return prev;
-  }, []);
+//removes duplicate links with the city param
+export const removeCityLinks = (links: string[]): string[] => {
+  //example: https://site.ua/ru/category-name/
+  const clear = /^https:\/\/\w+\.\w+\/\w+\/[a-zA-Z0-9-]+[^\/]\/$/;
+  //example: https://site.ua/ru/products/category-name/
+  const withProductsParam =
+    /^https:\/\/\w+\.\w+\/\w+\/products\/[a-zA-Z0-9-]+[^\/]\/$/;
 
-  const main = categories.map((el) =>
-    splitted
-      .filter((arr) => arr.find((kek) => kek === el))
-      .reduce((prev, next) => (prev.length > next.length ? next : prev))
+  return links.filter(
+    (link) => link.match(clear) || link.match(withProductsParam)
   );
-
-  return main.map((el) => el.join('/').replace(':', ':/'));
 };
 
 const scrapProducts = async (
@@ -107,7 +101,7 @@ const filterExistingCategories = async (links: string[]): Promise<string[]> => {
 };
 
 export const processLinks = async (links: string[]): Promise<void> => {
-  //TODO: add a feature in cli (--update) to "rescrap" categories
+  //TODO: add an option in cli (--update) to "rescrap" categories
   const update = false;
 
   const categoryLinks = update ? links : await filterExistingCategories(links);
@@ -121,11 +115,8 @@ export const processLinks = async (links: string[]): Promise<void> => {
       );
       logger.log('info', `Starting scrap category link: ${link}`);
 
-      const a = performance.now();
       const products = await scrapProducts(browser, link);
-      const b = performance.now();
 
-      logger.log('info', `time spent on scrap: ${b - a}`);
       logger.log(
         'info',
         `Start saving products info in db. Count: ${products.length}`

@@ -1,7 +1,7 @@
 import { siteService } from '../../../database/services/site.service';
 import { parseXmlByFilename } from '../../../liba/parseXML';
 import { SuiteProperties } from '../../../liba/wrappers/suite';
-import { filterDublicateCategories, processLinks } from './categories';
+import { processLinks, removeCityLinks } from './categories';
 
 export const initSiteCollection = async ({
   siteName,
@@ -39,7 +39,7 @@ export const start = async ({ xmlFolder }: SuiteProperties): Promise<void> => {
   for (const number of mainSitemaps) {
     const sitemap = parseXmlByFilename(xmlFolder, `sitemap${number}.xml`);
 
-    results.push(filterDublicateCategories(sitemap));
+    results.push(removeCityLinks(sitemap));
   }
 
   await processLinks(results.flat());

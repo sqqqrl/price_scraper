@@ -8,3 +8,4 @@
         At this point: add a "supplementable" param inside category model that says it is not compleated and can completed by scraping categories with filtres. 
 - [x] `add cli command to download and store sitemaps.`
 - [x] `restructure most of files`
+- [ ] move db models and services into coverage 
